@@ -12,12 +12,34 @@ export default class ImageViewer extends Component {
         this.state = {currentIndex: this.props.index}
     }
 
+    componentDidMount() {
+        if (document) {
+            document.addEventListener('keydown', (e) => {e.preventDefault; this.handleKeyPress(e.keyCode)})
+        }
+    }
+
+    componentWillUnmount() {
+        if (document) {
+            document.removeEventListener('keydown', (e) => {e.preventDefault; this.handleKeyPress(e.keyCode)})
+        }
+    }
+
     loadPreviousImage() {
         this.setState({currentIndex: this.state.currentIndex - 1})
     }
 
     loadNextImage() {
         this.setState({currentIndex: this.state.currentIndex + 1})
+    }
+
+    handleKeyPress(keycode) {
+        if(this.state.currentIndex > 0 && keycode === 37) {
+            this.setState({currentIndex: this.state.currentIndex - 1})
+        } else if (this.state.currentIndex !== this.length && keycode === 39) {
+            this.setState({currentIndex: this.state.currentIndex + 1})
+        } else if (keycode === 27) {
+            this.props.handleClose()
+        }
     }
 
     getContainerStyles() {
