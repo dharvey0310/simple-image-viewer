@@ -6,6 +6,8 @@ An image viewer component for React.js projects
 ----------
 This is a simple component for viewing images in React Projects. This doesn't handle displaying the images as thumbnails, only displaying the full size images.
 
+Updated with support for navigation using arrow keys and closing the viewer using the esc key.
+
 Install
 -------
 ---------
