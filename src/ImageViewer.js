@@ -14,7 +14,7 @@ export default class ImageViewer extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.disableKeyboardNav || this.props.hideArrows) {
+        if(!this.props.disableKeyboardNav || !this.props.hideArrows) {
             if (document) {
                 document.addEventListener('keydown', (e) => {e.preventDefault; this.handleKeyPress(e.keyCode)})
             }
@@ -65,15 +65,17 @@ export default class ImageViewer extends Component {
     }
 
     getArrowStyles(arrowDirection) {
-        if (this.props.arrowStyles) {
-            return this.props.arrowStyles
-        } else {
-            return {
+        const styles = {
                 fontSize: "5em",
                 color: this.props.inverted ? "#000000" : "#ffffff",
                 cursor: arrowDirection === "left" && this.state.currentIndex === 0 ? "auto" : arrowDirection === "right" && this.state.currentIndex === this.length ? "auto" : "pointer",
                 opacity: arrowDirection === "left" && this.state.currentIndex === 0 ? "0.5" : arrowDirection === "right" && this.state.currentIndex === this.length ? "0.5" : "1"
             }
+        if (this.props.arrowStyles) {
+            let customStyles = Object.assign(styles, this.props.arrowStyles)
+            return customStyles
+        } else {
+            return styles
         }
     }
 
@@ -95,6 +97,20 @@ export default class ImageViewer extends Component {
         }
     }
 
+    getImageStyles() {
+        const styles = {
+            visibility: `${this.state.visibility}`,
+            transform: `translateX(${this.state.translateValue})`,
+            transition: "transform 0.3s ease-out"
+        }
+        if(this.props.imageStyles) {
+            let customStyles = Object.assign(styles, this.props.imageStyles)
+            return customStyles
+        } else {
+            return styles
+        }
+    }
+
     render() {
         return (
             <div>
@@ -104,7 +120,7 @@ export default class ImageViewer extends Component {
                         <IoChevronLeft onClick={() => this.loadPreviousImage()} style={this.getArrowStyles("left")} />
                     </div> : null}
                 <div style={{maxWidth: "70%", background: `transparent url(${loader}) center no-repeat`}}>
-                    <img src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.props.imageStyles ? this.props.imageStyles : {visibility: `${this.state.visibility}`, transform: `translateX(${this.state.translateValue})`, transition: "transform 0.3s ease-out"}} />
+                    <img src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.getImageStyles()} />
                 </div>
                 {!this.props.hideArrows ?
                     <div>
