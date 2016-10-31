@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {IoChevronRight, IoChevronLeft, IoCloseRound} from 'react-icons/lib/io'
+import loader from 'url?limit=5000&name=loader.svg!./static/default.svg'
 
 export default class ImageViewer extends Component {
     constructor(props) {
@@ -9,12 +10,14 @@ export default class ImageViewer extends Component {
         this.loadNextImage = this.loadNextImage.bind(this)
 
         this.length = this.props.images.length - 1
-        this.state = {currentIndex: this.props.index}
+        this.state = {currentIndex: this.props.index, translateValue: 0}
     }
 
     componentDidMount() {
-        if (document) {
-            document.addEventListener('keydown', (e) => {e.preventDefault; this.handleKeyPress(e.keyCode)})
+        if(!this.props.disableKeyboardNav || this.props.hideArrows) {
+            if (document) {
+                document.addEventListener('keydown', (e) => {e.preventDefault; this.handleKeyPress(e.keyCode)})
+            }
         }
     }
 
@@ -25,18 +28,18 @@ export default class ImageViewer extends Component {
     }
 
     loadPreviousImage() {
-        this.setState({currentIndex: this.state.currentIndex - 1})
+        this.setState({translateValue: "-150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: 0}), 1000))
     }
 
     loadNextImage() {
-        this.setState({currentIndex: this.state.currentIndex + 1})
+        this.setState({translateValue: "150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: 0}), 1000))
     }
 
     handleKeyPress(keycode) {
         if(this.state.currentIndex > 0 && keycode === 37) {
-            this.setState({currentIndex: this.state.currentIndex - 1})
+            this.loadPreviousImage()
         } else if (this.state.currentIndex !== this.length && keycode === 39) {
-            this.setState({currentIndex: this.state.currentIndex + 1})
+            this.loadNextImage()
         } else if (keycode === 27) {
             this.props.handleClose()
         }
@@ -70,10 +73,7 @@ export default class ImageViewer extends Component {
     }
 
     getCloseStyles() {
-        if (this.props.closeStyles) {
-            return this.props.closeStyles
-        } else {
-            return {
+        const styles= {
                 position: "fixed",
                 top: "1px",
                 right: "1px",
@@ -82,6 +82,11 @@ export default class ImageViewer extends Component {
                 color: this.props.inverted ? "#000000" : "#ffffff",
                 cursor: "pointer"
             }
+        if (this.props.closeStyles) {
+            let customStyles = Object.assign(styles, this.props.closeStyles)
+            return customStyles
+        } else {
+            return styles
         }
     }
 
@@ -93,8 +98,8 @@ export default class ImageViewer extends Component {
                     <div>
                         <IoChevronLeft onClick={() => this.loadPreviousImage()} style={this.getArrowStyles()} />
                     </div> : null}
-                <div style={{maxWidth: "70%"}}>
-                    <img src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.props.imageStyles ? this.props.imageStyles : {}} />
+                <div style={{maxWidth: "70%", background: `transparent url(${loader}) center no-repeat`}}>
+                    <img src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.props.imageStyles ? this.props.imageStyles : {transform: `translateX(${this.state.translateValue})`, transition: "transform 0.5s linear"}} />
                 </div>
                 {this.state.currentIndex !== this.length && !this.props.hideArrows ?
                     <div>
