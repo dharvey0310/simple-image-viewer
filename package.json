@@ -1,6 +1,6 @@
 {
   "name": "simple-image-viewer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A simple image viewer component for React projects",
   "main": "./lib",
   "author": "David Harvey",
@@ -23,7 +23,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.3"
   },
-    "repository": {
+  "repository": {
     "type": "git",
     "url": "https://github.com/dharvey0310/simple-image-viewer.git"
   }
