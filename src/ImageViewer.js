@@ -119,7 +119,7 @@ export default class ImageViewer extends Component {
                     <div>
                         <IoChevronLeft onClick={() => this.loadPreviousImage()} style={this.getArrowStyles("left")} />
                     </div> : null}
-                <div style={{maxWidth: "70%", background: `transparent url(${loader}) center no-repeat`}}>
+                <div className="siv-img-container" style={{background: `transparent url(${loader}) center no-repeat`}}>
                     <img src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.getImageStyles()} />
                 </div>
                 {!this.props.hideArrows ?
