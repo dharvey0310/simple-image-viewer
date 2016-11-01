@@ -2444,6 +2444,10 @@ react-icons:
   dependencies:
     react-icon-base "2.0.3"
 
+react-swipeable:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/react-swipeable/-/react-swipeable-3.7.0.tgz#c51f1a9c21e132d06bb95bf75554d23f89385162"
+
 read-pkg-up@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-1.0.1.tgz#9d63c13276c065918d57f002a57f40a1b643fb02"

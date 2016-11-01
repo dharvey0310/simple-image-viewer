@@ -19,7 +19,8 @@ var webpackConfig = {
 	},
     externals: {
         'react': 'react',
-        'react-icons/lib/io': 'react-icons/lib/io'
+        'react-icons/lib/io': 'react-icons/lib/io',
+        'react-swipeable': 'react-swipeable'
     }
 }
 

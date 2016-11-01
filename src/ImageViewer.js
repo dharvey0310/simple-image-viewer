@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import Swipeable from 'react-swipeable'
 import {IoChevronRight, IoChevronLeft, IoCloseRound} from 'react-icons/lib/io'
 import loader from 'url?limit=5000&name=loader.svg!./static/default.svg'
 
@@ -29,13 +30,13 @@ export default class ImageViewer extends Component {
 
     loadPreviousImage() {
         if (this.state.currentIndex > 0) {
-            this.setState({translateValue: "-150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "150%", visibility: "hidden"}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0}), 500)), 500))
+            this.setState({translateValue: "150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-150%", visibility: "hidden"}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0}), 500)), 500))
         }
     }
 
     loadNextImage() {
         if (this.state.currentIndex !== this.length) {
-            this.setState({translateValue: "150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "-150%", visibility: "hidden"}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0}), 500)), 500))
+            this.setState({translateValue: "-150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "150%", visibility: "hidden"}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0}), 500)), 500))
         }
     }
 
@@ -113,7 +114,7 @@ export default class ImageViewer extends Component {
 
     render() {
         return (
-            <div>
+            <Swipeable onSwipedRight={() => this.loadPreviousImage()} onSwipedLeft={() => this.loadNextImage()}>
             <div style={this.getContainerStyles()} className={`${this.props.containerClass ? this.props.containerClass : ""}`}>
                 {!this.props.hideArrows ?
                     <div>
@@ -130,7 +131,7 @@ export default class ImageViewer extends Component {
             <div>
                 <IoCloseRound style={this.getCloseStyles()} onClick={() => this.props.handleClose()} />
             </div>
-            </div>
+            </Swipeable>
         )
     }
 }
