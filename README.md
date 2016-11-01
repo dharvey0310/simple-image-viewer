@@ -24,14 +24,16 @@ Usage
 -------
 --------
 
-Begin by importing the component to your project
+Begin by importing the component & css to your project
 
 ```javascript
     // es6 imports
     import ImageViewer from 'simple-image-viewer'
+    import 'simple-image-viewer/lib/styles.css'
     
     // CommonJS
     var ImageViewer = require('simple-image-viewer')
+    require('simple-image-viewer/lib/styles.css')
 ```
 
 The simplest usage is to pass an array of images to the ImageViewer along with the index of the image to display first and a function to handle closing the viewer
