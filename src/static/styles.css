@@ -3,5 +3,7 @@
 }
 
 @media(max-width: 992px) and (orientation: landscape) {
-    max-width: 40%;
+    .siv-img-container {
+        max-width: 40%;
+    }
 }
