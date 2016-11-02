@@ -8,6 +8,8 @@ This is a simple component for viewing images in React Projects. This doesn't ha
 
 Updated with support for navigation using arrow keys and closing the viewer using the esc key.
 
+**0.2.0** Updated to allow navigation via swiping left and right on touch screen devices
+
 Install
 -------
 ---------
