@@ -11,7 +11,7 @@ export default class ImageViewer extends Component {
         this.loadNextImage = this.loadNextImage.bind(this)
 
         this.length = this.props.images.length - 1
-        this.state = {currentIndex: this.props.index, translateValue: 0, visibility: "visible"}
+        this.state = {currentIndex: this.props.index, translateValue: 0, visibility: "visible", opacity: 1}
     }
 
     componentDidMount() {
@@ -30,13 +30,13 @@ export default class ImageViewer extends Component {
 
     loadPreviousImage() {
         if (this.state.currentIndex > 0) {
-            this.setState({translateValue: "150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-150%", visibility: "hidden"}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0}), 500)), 500))
+            this.setState({translateValue: "200%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-200%", visibility: "hidden", opacity: 0}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0, opacity: 1}), 500)), 500))
         }
     }
 
     loadNextImage() {
         if (this.state.currentIndex !== this.length) {
-            this.setState({translateValue: "-150%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "150%", visibility: "hidden"}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0}), 500)), 500))
+            this.setState({translateValue: "-200%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "200%", visibility: "hidden", opacity: 0}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0, opacity: 1}), 500)), 500))
         }
     }
 
@@ -102,7 +102,7 @@ export default class ImageViewer extends Component {
         const styles = {
             visibility: `${this.state.visibility}`,
             transform: `translateX(${this.state.translateValue})`,
-            transition: "transform 0.3s ease-out"
+            transition: "transform 0.4s ease-out, opacity 0.3s ease-out"
         }
         if(this.props.imageStyles) {
             let customStyles = Object.assign(styles, this.props.imageStyles)
