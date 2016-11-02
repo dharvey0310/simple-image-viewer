@@ -102,7 +102,8 @@ export default class ImageViewer extends Component {
         const styles = {
             visibility: `${this.state.visibility}`,
             transform: `translateX(${this.state.translateValue})`,
-            transition: "transform 0.4s ease-out, opacity 0.3s ease-out"
+            transition: "transform 0.4s ease-out, opacity 0.3s ease-out",
+            opacity: this.state.opacity
         }
         if(this.props.imageStyles) {
             let customStyles = Object.assign(styles, this.props.imageStyles)
