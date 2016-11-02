@@ -1,6 +1,6 @@
 {
   "name": "simple-image-viewer",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A simple image viewer component for React projects",
   "main": "./lib",
   "author": "David Harvey",
