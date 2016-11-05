@@ -9,9 +9,10 @@ export default class ImageViewer extends Component {
 
         this.loadPreviousImage = this.loadPreviousImage.bind(this)
         this.loadNextImage = this.loadNextImage.bind(this)
+        this.imageLoaded = this.imageLoaded.bind(this)
 
         this.length = this.props.images.length - 1
-        this.state = {currentIndex: this.props.index, translateValue: 0, visibility: "visible", opacity: 1}
+        this.state = {currentIndex: this.props.index, translateValue: 0, visibility: "visible", opacity: 1, loading: true}
     }
 
     componentDidMount() {
@@ -28,15 +29,19 @@ export default class ImageViewer extends Component {
         }
     }
 
+    imageLoaded() {
+        setTimeout(() => this.setState({loading: false, translateValue: 0, visibility: "visible", opacity: 1}), 500)
+    }
+
     loadPreviousImage() {
         if (this.state.currentIndex > 0) {
-            this.setState({translateValue: "200%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-200%", visibility: "hidden", opacity: 0}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0, opacity: 1}), 500)), 500))
+            this.setState({translateValue: "200%", loading: true}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-200%", visibility: "hidden", opacity: 0}), 500))
         }
     }
 
     loadNextImage() {
         if (this.state.currentIndex !== this.length) {
-            this.setState({translateValue: "-200%"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "200%", visibility: "hidden", opacity: 0}, () => setTimeout(() => this.setState({visibility: "visible", translateValue: 0, opacity: 1}), 500)), 500))
+            this.setState({translateValue: "-200%", loading: true}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "200%", visibility: "hidden", opacity: 0}), 500))
         }
     }
 
@@ -121,8 +126,8 @@ export default class ImageViewer extends Component {
                     <div>
                         <IoChevronLeft onClick={() => this.loadPreviousImage()} style={this.getArrowStyles("left")} />
                     </div> : null}
-                <div className="siv-img-container" style={{background: `transparent url(${loader}) center no-repeat`}}>
-                    <img src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.getImageStyles()} />
+                <div className="siv-img-container" style={this.state.loading ? {background: `transparent url(${loader}) center no-repeat`} : {}}>
+                    <img onLoad={() => this.imageLoaded()} src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.getImageStyles()} />
                 </div>
                 {!this.props.hideArrows ?
                     <div>
