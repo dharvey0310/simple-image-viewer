@@ -1,7 +1,8 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import Swipeable from 'react-swipeable'
 import {IoChevronRight, IoChevronLeft, IoCloseRound} from 'react-icons/lib/io'
 import loader from 'url?limit=5000&name=loader.svg!./static/default.svg'
+import errorImage from 'url?limit=10000&name=error.jpg!./static/404.jpg'
 
 export default class ImageViewer extends Component {
     constructor(props) {
@@ -10,9 +11,10 @@ export default class ImageViewer extends Component {
         this.loadPreviousImage = this.loadPreviousImage.bind(this)
         this.loadNextImage = this.loadNextImage.bind(this)
         this.imageLoaded = this.imageLoaded.bind(this)
+        this.imageError = this.imageError.bind(this)
 
         this.length = this.props.images.length - 1
-        this.state = {currentIndex: this.props.index, translateValue: 0, visibility: "visible", opacity: 1, loading: true}
+        this.state = {currentIndex: this.props.index, translateValue: 0, opacity: 1, loading: true, transition: "transform 0.4s ease-out", error: false}
     }
 
     componentDidMount() {
@@ -29,19 +31,23 @@ export default class ImageViewer extends Component {
         }
     }
 
+    imageError() {
+        this.setState({loading: false, error: true, translateValue: 0, opacity: 1})
+    }
+
     imageLoaded() {
-        setTimeout(() => this.setState({loading: false, translateValue: 0, visibility: "visible", opacity: 1}), 500)
+        setTimeout(() => this.setState({loading: false, translateValue: 0, opacity: 1, transition: "transform 0.4s ease-out, opacity 0.3s ease-out"}), 500)
     }
 
     loadPreviousImage() {
         if (this.state.currentIndex > 0) {
-            this.setState({translateValue: "200%", loading: true}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-200%", visibility: "hidden", opacity: 0}), 500))
+            this.setState({error: false, translateValue: "200%", loading: true, transition: "transform 0.4s ease-out"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-200%", opacity: 0}), 500))
         }
     }
 
     loadNextImage() {
         if (this.state.currentIndex !== this.length) {
-            this.setState({translateValue: "-200%", loading: true}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "200%", visibility: "hidden", opacity: 0}), 500))
+            this.setState({error: false, translateValue: "-200%", loading: true, transition: "transform 0.4s ease-out"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "200%", opacity: 0}), 500))
         }
     }
 
@@ -105,9 +111,8 @@ export default class ImageViewer extends Component {
 
     getImageStyles() {
         const styles = {
-            visibility: `${this.state.visibility}`,
             transform: `translateX(${this.state.translateValue})`,
-            transition: "transform 0.4s ease-out, opacity 0.3s ease-out",
+            transition: this.state.transition,
             opacity: this.state.opacity
         }
         if(this.props.imageStyles) {
@@ -123,21 +128,40 @@ export default class ImageViewer extends Component {
             <Swipeable onSwipedRight={() => this.loadPreviousImage()} onSwipedLeft={() => this.loadNextImage()}>
             <div style={this.getContainerStyles()} className={`${this.props.containerClass ? this.props.containerClass : ""}`}>
                 {!this.props.hideArrows ?
-                    <div>
+                    <div style={{position: "relative", zIndex: "9999"}}>
                         <IoChevronLeft onClick={() => this.loadPreviousImage()} style={this.getArrowStyles("left")} />
                     </div> : null}
                 <div className="siv-img-container" style={this.state.loading ? {background: `transparent url(${loader}) center no-repeat`} : {}}>
-                    <img onLoad={() => this.imageLoaded()} src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.getImageStyles()} />
+                    {!this.state.error ? <img onLoad={() => this.imageLoaded()} onError={() => this.imageError()} src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.getImageStyles()} /> :
+                    <img src={errorImage} />}
                 </div>
                 {!this.props.hideArrows ?
-                    <div>
+                    <div style={{postion: "relative", zIndex: "9999"}}>
                         <IoChevronRight onClick={() => this.loadNextImage()} style={this.getArrowStyles("right")} />
                     </div> : null}
             </div>
-            <div>
-                <IoCloseRound style={this.getCloseStyles()} onClick={() => this.props.handleClose()} />
-            </div>
+            {!this.props.hideClose ?
+                <div>
+                    <IoCloseRound style={this.getCloseStyles()} onClick={() => this.props.handleClose()} />
+                </div> : null}
             </Swipeable>
         )
     }
+}
+
+ImageViewer.propTypes = {
+    images: PropTypes.arrayOf(PropTypes.string).isRequired,
+    index: PropTypes.number.isRequired,
+    handleClose: PropTypes.func,
+    disableKeyboardNav: PropTypes.bool,
+    hideArrows: PropTypes.bool,
+    inverted: PropTypes.bool,
+    opacity: PropTypes.number,
+    clear: PropTypes.bool,
+    arrowStyles: PropTypes.object,
+    closeStyles: PropTypes.object,
+    imageStyles: PropTypes.object,
+    containerClass: PropTypes.string,
+    imageClass: PropTypes.string,
+    hideClose: PropTypes.bool
 }
