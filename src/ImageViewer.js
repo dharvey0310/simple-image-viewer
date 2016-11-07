@@ -32,7 +32,7 @@ export default class ImageViewer extends Component {
     }
 
     imageError() {
-        this.setState({loading: false, error: true, translateValue: 0, opacity: 1})
+        this.setState({loading: false, error: true, translateValue: 0, opacity: 1, transition: "transform 0.4s ease-out, opacity 0.3s ease-out"})
     }
 
     imageLoaded() {
@@ -41,13 +41,13 @@ export default class ImageViewer extends Component {
 
     loadPreviousImage() {
         if (this.state.currentIndex > 0) {
-            this.setState({error: false, translateValue: "200%", loading: true, transition: "transform 0.4s ease-out"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex - 1, translateValue: "-200%", opacity: 0}), 500))
+            this.setState({translateValue: "200%", loading: true, transition: "transform 0.4s ease-out"}, () => setTimeout(() => this.setState({error: false, currentIndex: this.state.currentIndex - 1, translateValue: "-200%", opacity: 0}), 500))
         }
     }
 
     loadNextImage() {
         if (this.state.currentIndex !== this.length) {
-            this.setState({error: false, translateValue: "-200%", loading: true, transition: "transform 0.4s ease-out"}, () => setTimeout(() => this.setState({currentIndex: this.state.currentIndex + 1, translateValue: "200%", opacity: 0}), 500))
+            this.setState({translateValue: "-200%", loading: true, transition: "transform 0.4s ease-out"}, () => setTimeout(() => this.setState({error: false, currentIndex: this.state.currentIndex + 1, translateValue: "200%", opacity: 0}), 500))
         }
     }
 
@@ -133,7 +133,7 @@ export default class ImageViewer extends Component {
                     </div> : null}
                 <div className="siv-img-container" style={this.state.loading ? {background: `transparent url(${loader}) center no-repeat`} : {}}>
                     {!this.state.error ? <img onLoad={() => this.imageLoaded()} onError={() => this.imageError()} src={this.props.images[this.state.currentIndex]} className={`${this.props.imageClass ? this.props.imageClass : ""}`} style={this.getImageStyles()} /> :
-                    <img src={errorImage} />}
+                    <img src={errorImage} style={this.getImageStyles()} />}
                 </div>
                 {!this.props.hideArrows ?
                     <div style={{postion: "relative", zIndex: "9999"}}>
