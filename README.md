@@ -59,17 +59,18 @@ There are also a number of other props as detailed below to control the look of 
 Props
 -------
 
-| Prop        | Usage                  |
-|-------------|------------------------|
-| images      | An array with the images to display |
-| index       | The position in the array of the image to show first |
-| handleClose | A function to handle the clicking of the close icon  |
-| containerClass | An optional css class to use on the overlay container |
-| hideArrows | Hides the navigation arrows |
-| inverted   | Changes the overlay colour to white and the arrows and close icon to black |
-| clear       | Sets the opacity of the overlay to 0 |
-| opacity     | Used to set a custom opacity for the overlay (default is 0.8) |
-| imageClass  | An optional css class to apply styles to the image which is displaying |
-| imageStyles | Used to apply inline styles to the image |
-| arrowStyles | Used to apply styles to the navigation arrows |
-| closeStyles | Used to apply styles to the close icon (can be used to change the position of the icon) |
+| Prop        | Type        | Usage                  |
+|-------------|-------------|------------------------|
+| images      | Array       | An array with the images to display |
+| index       | Number      | The position in the array of the image to show first |
+| handleClose | Function    | A function to handle the clicking of the close icon  |
+| containerClass | String   | An optional css class to use on the overlay container |
+| hideArrows | Boolean      | Hides the navigation arrows |
+| inverted   | Boolean      | Changes the overlay colour to white and the arrows and close icon to black |
+| clear       | Boolean     | Sets the opacity of the overlay to 0 |
+| opacity     | Number      | Used to set a custom opacity for the overlay (default is 0.8) |
+| imageClass  | String      | An optional css class to apply styles to the image which is displaying |
+| imageStyles | Object      | Used to apply inline styles to the image |
+| arrowStyles | Object      | Used to apply styles to the navigation arrows |
+| closeStyles | Object      | Used to apply styles to the close icon (can be used to change the position of the icon) |
+| disableKeyboardNav | Boolean   | Disable navigating the images using the keyboard |
