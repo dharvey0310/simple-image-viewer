@@ -49,6 +49,7 @@ export default class ImageViewer extends Component {
         if (this.state.currentIndex !== this.length) {
             this.setState({translateValue: "-200%", loading: true, transition: "transform 0.4s ease-out"}, () => setTimeout(() => this.setState({error: false, currentIndex: this.state.currentIndex + 1, translateValue: "200%", opacity: 0}), 500))
         }
+        (this.state.currentIndex === (this.length-1)) && this.props.pagingFunction ? this.props.pagingFunction() : null
     }
 
     handleKeyPress(keycode) {
@@ -163,5 +164,6 @@ ImageViewer.propTypes = {
     imageStyles: PropTypes.object,
     containerClass: PropTypes.string,
     imageClass: PropTypes.string,
-    hideClose: PropTypes.bool
+    hideClose: PropTypes.bool,
+    pagingFunction: PropTypes.func
 }
