@@ -31,6 +31,10 @@ export default class ImageViewer extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        this.length = this.props.images.length - 1
+    }
+
     imageError() {
         this.setState({loading: false, error: true, translateValue: 0, opacity: 1, transition: "transform 0.4s ease-out, opacity 0.3s ease-out"})
     }
