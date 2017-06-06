@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ImageItem from './ImageItem.js';
 import Swipeable from 'react-swipeable';
 import { IoChevronRight, IoChevronLeft, IoCloseRound } from 'react-icons/lib/io';
 import loader from 'url?limit=5000&name=loader.svg!./static/default.svg';
@@ -8,8 +9,7 @@ export default class ImageViewer extends Component {
   constructor(props) {
     super(props);
 
-    this.loadPreviousImage = this.loadPreviousImage.bind(this);
-    this.loadNextImage = this.loadNextImage.bind(this);
+    this.handleTransition = this.handleTransition.bind(this);
     this.imageLoaded = this.imageLoaded.bind(this);
     this.imageError = this.imageError.bind(this);
     this.keyPressHandler = this.keyPressHandler.bind(this);
@@ -52,28 +52,47 @@ export default class ImageViewer extends Component {
     setTimeout(() => this.setState({ loading: false, translateValue: 0, opacity: 1, transition: 'transform 0.4s ease-out, opacity 0.3s ease-out' }), 500);
   }
 
-  loadPreviousImage() {
-    if (this.state.currentIndex > 0) {
-      this.setState({ translateValue: '200%', loading: true, transition: 'transform 0.4s ease-out' }, () =>
-        setTimeout(() => this.setState({ error: false, currentIndex: this.state.currentIndex - 1, translateValue: '-200%', opacity: 0 }), 500)
-      );
-    }
-  }
+  handleTransition(direction) {
+    if (direction === 'prev' && !this.state.transitionActive && this.state.currentIndex > 0) {
+      this.setState((prevState, prevProps) => {
+        return { nextIndex: prevState.currentIndex - 1, prev: true, transitionActive: true };
+      });
 
-  loadNextImage() {
-    if (this.state.currentIndex !== this.length) {
-      this.setState({ translateValue: '-200%', loading: true, transition: 'transform 0.4s ease-out' }, () =>
-        setTimeout(() => this.setState({ error: false, currentIndex: this.state.currentIndex + 1, translateValue: '200%', opacity: 0 }), 500)
-      );
+      setTimeout(() => {
+        this.setState((prevState, prevProps) => {
+          return { direction: true };
+        });
+      }, 300);
+
+      setTimeout(() => {
+        this.setState((prevState, prevProps) => {
+          return { nextIndex: null, currentIndex: prevState.nextIndex, prev: false, direction: false, transitionActive: false };
+        });
+      }, 400);
+    } else if (direction === 'next' && !this.state.transitionActive && this.state.currentIndex !== this.length) {
+      this.setState((prevState, prevProps) => {
+        return { nextIndex: prevState.currentIndex + 1, next: true, transitionActive: true };
+      });
+
+      setTimeout(() => {
+        this.setState((prevState, prevProps) => {
+          return { direction: true };
+        });
+      }, 300);
+
+      setTimeout(() => {
+        this.setState((prevState, prevProps) => {
+          return { nextIndex: null, currentIndex: prevState.nextIndex, next: false, direction: false, transitionActive: false };
+        });
+      }, 400);
     }
-    this.state.currentIndex === this.length - 1 && this.props.pagingFunction ? this.props.pagingFunction() : null;
   }
 
   handleKeyPress(keycode) {
     if (keycode === 37) {
-      this.loadPreviousImage();
+      this.handleTransition('prev');
     } else if (keycode === 39) {
-      this.loadNextImage();
+      this.handleTransition('next');
     } else if (keycode === 27) {
       this.props.handleClose();
     }
@@ -149,14 +168,36 @@ export default class ImageViewer extends Component {
 
   render() {
     return (
-      <Swipeable onSwipedRight={() => this.loadPreviousImage()} onSwipedLeft={() => this.loadNextImage()}>
+      <Swipeable onSwipedRight={() => this.handleTransition('prev')} onSwipedLeft={() => this.handleTransition('next')}>
         <div style={this.getContainerStyles()} className={`${this.props.containerClass ? this.props.containerClass : ''}`}>
           {!this.props.hideArrows
             ? <div style={{ position: 'relative', zIndex: '9999' }}>
-                <IoChevronLeft onClick={() => this.loadPreviousImage()} style={this.getArrowStyles('left')} />
+                <IoChevronLeft onClick={() => this.handleTransition('prev')} style={this.getArrowStyles('left')} />
               </div>
             : null}
           <div
+            className="siv-img-container"
+            style={this.state.transitionActive || this.props.forceLoadSpinner ? { background: `transparent url(${loader}) center no-repeat` } : {}}>
+            {this.props.images.map((image, index) => {
+              return (
+                <ImageItem
+                  key={image}
+                  image={image}
+                  imageLoaded={this.imageLoaded}
+                  imageError={this.imageError}
+                  imageClass={this.props.imageClass}
+                  active={index === this.state.currentIndex}
+                  index={index}
+                  prev={this.state.prev}
+                  next={this.state.next}
+                  nextActive={this.state.nextIndex}
+                  direction={this.state.direction}
+                />
+              );
+            })}
+          </div>
+
+          {/*<div
             className="siv-img-container"
             style={this.state.loading || this.props.forceLoadSpinner ? { background: `transparent url(${loader}) center no-repeat` } : {}}>
             {!this.state.error
@@ -164,14 +205,14 @@ export default class ImageViewer extends Component {
                   onLoad={() => this.imageLoaded()}
                   onError={() => this.imageError()}
                   src={this.props.images[this.state.currentIndex]}
-                  className={`${this.props.imageClass ? this.props.imageClass : ''}`}
+                  className={`image-viewer ${this.props.imageClass ? this.props.imageClass : ''}`}
                   style={this.getImageStyles()}
                 />
               : <img src={errorImage} style={this.getImageStyles()} />}
-          </div>
+          </div>*/}
           {!this.props.hideArrows
             ? <div style={{ postion: 'relative', zIndex: '9999' }}>
-                <IoChevronRight onClick={() => this.loadNextImage()} style={this.getArrowStyles('right')} />
+                <IoChevronRight onClick={() => this.handleTransition('next')} style={this.getArrowStyles('right')} />
               </div>
             : null}
         </div>
