@@ -30,15 +30,15 @@
 }
 
 .siv-img-container > .siv-image.active.left {
-  transform: translate3d(-200%, 0, 0);
+  transform: translate3d(-100vw, 0, 0);
 }
 
 .siv-img-container > .siv-image.active.right {
-  transform: translate3d(200%, 0, 0);
+  transform: translate3d(100vw, 0, 0);
 }
 
 .siv-img-container > .siv-image.next {
-  transform: translate3d(200%, 0, 0);
+  transform: translate3d(100vw, 0, 0);
 }
 
 .siv-img-container > .siv-image.next.left {
@@ -47,7 +47,7 @@
 }
 
 .siv-img-container > .siv-image.prev {
-  transform: translate3d(-200%, 0, 0);
+  transform: translate3d(-100vw, 0, 0);
 }
 
 .siv-img-container > .siv-image.prev.right {

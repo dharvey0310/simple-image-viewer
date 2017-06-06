@@ -62,7 +62,7 @@ export default class ImageViewer extends Component {
         this.setState((prevState, prevProps) => {
           return { direction: true };
         });
-      }, 300);
+      }, 400);
 
       setTimeout(() => {
         this.setState((prevState, prevProps) => {
@@ -78,7 +78,7 @@ export default class ImageViewer extends Component {
         this.setState((prevState, prevProps) => {
           return { direction: true };
         });
-      }, 300);
+      }, 400);
 
       setTimeout(() => {
         this.setState((prevState, prevProps) => {
